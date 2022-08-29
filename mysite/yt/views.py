@@ -5,12 +5,8 @@ from .models import video_data
 import requests
 import json
 
-# https://github.com/Anandjeechoubey/async-yt-api
-
-
-# USING API STARTS HERE
-# HERE I HAVE USED API RESULT LIMIT OF 100 ONLY (maxResults=100)
-
+#https://github.com/youtube/api-samples
+#collectin repo YT API
 
 class YTData:
     def __init__(
@@ -25,7 +21,39 @@ class YTData:
         self.data["Video List"] = []
         self.count = 1
 
+    # function for loading page to get the required fields
+    def get_channel_stats_page1(self):
+        # using URL to get data from API
+        url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&q={self.query}&maxResults=100&type=video&eventType=completed&order=date&key={self.api_key}"
+        # getting data in json form and converting it into string for extraction of relevent fields
+        json_url = requests.get(url)
+        data = json.loads(json_url.text)
+        try:
+            self.next_page_token = data["nextPageToken"]
+            # getting max number of data given in that page
+            n = data["pageInfo"]["resultsPerPage"]
+            # looping through each data for fields
+            for i in range(n):
+                video_title = data["items"][i]["snippet"]["title"]
+                image = data["items"][i]["snippet"]["thumbnails"]["high"]["url"]
+                publishTime = data["items"][i]["snippet"]["publishedAt"]
+                channel = data["items"][i]["snippet"]["channelTitle"]
+                descrip = data["items"][i]["snippet"]["description"]
+                # storing data into dictionary
+                self.data["Video List"].append(
+                    {
+                        "index": self.count,
+                        "title": video_title,
+                        "description": descrip,
+                        "publishtime": publishTime,
+                        "channel": channel,
+                        "image": image,
+                    }
+                )
+                self.count += 1
 
+        except:
+            data = None
 
 
 # function for calling class YTdata which will call API to get data
