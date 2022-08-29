@@ -5,8 +5,9 @@ from .models import video_data
 import requests
 import json
 
-#https://github.com/youtube/api-samples
-#collectin repo YT API
+# https://github.com/youtube/api-samples
+# collectin repo YT API
+
 
 class YTData:
     def __init__(
@@ -22,7 +23,7 @@ class YTData:
         self.count = 1
 
     # function for loading page to get the required fields
-    def get_channel_stats_page1(self):
+    def get_loading_stats(self):
         # using URL to get data from API
         url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&q={self.query}&maxResults=100&type=video&eventType=completed&order=date&key={self.api_key}"
         # getting data in json form and converting it into string for extraction of relevent fields
@@ -48,6 +49,39 @@ class YTData:
                         "publishtime": publishTime,
                         "channel": channel,
                         "image": image,
+                    }
+                )
+                self.count += 1
+
+        except:
+            data = None
+
+    def get_channel_stats(self):
+        # using URL to get data from API and applying token received from previous page
+        url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&pageToken={self.next_page_token}&maxResults=100&q={self.query}&type=video&eventType=completed&order=date&key={self.api_key}"
+        # getting data in json form and converting it into string for extraction of relevent fields
+        json_url = requests.get(url)
+        data = json.loads(json_url.text)
+        try:
+            self.next_page_token = data["nextPageToken"]
+            # getting max number of data given in that page
+            n = data["pageInfo"]["resultsPerPage"]
+            # looping through each data for fields
+            for i in range(n):
+                video_title = data["items"][i]["snippet"]["title"]
+                descrip = data["items"][i]["snippet"]["description"]
+                publishTime = data["items"][i]["snippet"]["publishedAt"]
+                image = data["items"][i]["snippet"]["thumbnails"]["high"]["url"]
+                channel = data["items"][i]["snippet"]["channelTitle"]
+                # storing data into dictionary
+                self.data["Video List"].append(
+                    {
+                        "index": self.count,
+                        "title": video_title,
+                        "description": descrip,
+                        "publishtime": publishTime,
+                        "image": image,
+                        "channel": channel,
                     }
                 )
                 self.count += 1
@@ -87,8 +121,8 @@ def display_string(request):
             api = API_Key[i]
             current_api = api
     yt = YTData(current_api, query)
-    yt.get_channel_stats_page1()
-    yt.get_channel_stats_pagen()
+    yt.get_loading_stats()
+    yt.get_channel_stats()
     # Getting data here in form of dictionary
     dictionary_data = yt.return_data()
     dictionary_data = dictionary_data["Video List"]
