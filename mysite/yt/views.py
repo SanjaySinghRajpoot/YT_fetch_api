@@ -90,6 +90,22 @@ class YTData:
             data = None
 
 
+def searchQuery(self, request, format=None):
+    serializer_class = VideoSerializer
+    data = self.request.data
+    print(data)
+    category = data["category"]
+    print(category)
+    print(category["name"])
+    name = category["name"]
+    queryset = Photo.objects.filter(
+        category__name=name
+    )  
+    print(queryset[0])
+    serializer = VideoSerializer(queryset, many=True)
+    return Response(serializer.data)  
+
+
 # function for calling class YTdata which will call API to get data
 def display_string(request):
     # List of API keys that can be used
