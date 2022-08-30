@@ -12,5 +12,10 @@ This project is completely based on Django.
 - Go the project through the terminal and install all dependencies by using typing `pip install -r requirements.txt` in the terminal
 - Run the server using `python mange.py runserver`
 
+# key features
+
+- multiple API keys so that if quota is exhausted on one, it automatically uses the next available key.
+- Entire application can be delpoyed with the help of docker 
+
 ## Screenshots
 ![homepage](Assets/homepage.png)
