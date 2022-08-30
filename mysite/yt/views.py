@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import video_data
+from .serializers import VideosSerializer
 
 # Create your views here.
 import requests
@@ -89,20 +90,22 @@ class YTData:
         except:
             data = None
 
+        # returning dictionary that has relevent fields for displaying
+    def return_data(self):
+        return self.data
+
 
 def searchQuery(self, request, format=None):
-    serializer_class = VideoSerializer
+    serializer_class = VideosSerializer
     data = self.request.data
     print(data)
-    category = data["category"]
-    print(category)
-    print(category["name"])
-    name = category["name"]
-    queryset = Photo.objects.filter(
-        category__name=name
+    query = data["title"]
+    print(query)
+    queryset = video_data.objects.filter(
+        title = query
     )  
-    print(queryset[0])
-    serializer = VideoSerializer(queryset, many=True)
+    print(queryset)
+    serializer = video_data(queryset, many=True)
     return Response(serializer.data)  
 
 
@@ -110,12 +113,13 @@ def searchQuery(self, request, format=None):
 def display_string(request):
     # List of API keys that can be used
     API_Key = [
-        "AIzaSyB9QNacHSAQ4deQp4RjVf3gXZOKXtMCwJk",
-        "AIzaSyDK-WNR6d2LayUqiemCKOcMYPlDV6jvTh0",
-        "AIzaSyCmLgeX3GtUgfn7ZjkkWHfOWCMb1MkDEpU",
+        "AIzaSyDK3D7jgGxwEeGsWzWgMtgu3eLZPM5OeFA",
         "AIzaSyAip91VlvxNxaw7Fd1mF1s0lUtegg5WtPU",
-        "AIzaSyDAYksLzTBkPf9TQC6th2c9iBSXZ6-Dl8I",
         "AIzaSyDa1vWMOyRYGq4Qv4Lg_AelhTAiHw4E7OQ",
+        "AIzaSyCmLgeX3GtUgfn7ZjkkWHfOWCMb1MkDEpU",
+        "AIzaSyDK-WNR6d2LayUqiemCKOcMYPlDV6jvTh0",
+        "AIzaSyB9QNacHSAQ4deQp4RjVf3gXZOKXtMCwJk",
+        "AIzaSyDAYksLzTBkPf9TQC6th2c9iBSXZ6-Dl8I",
     ]
     # specific query (here used is "smartphone")
     query = "smartphone"
