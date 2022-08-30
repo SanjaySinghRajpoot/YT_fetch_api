@@ -106,7 +106,7 @@ def searchQuery(self, request, format=None):
     )  
     print(queryset)
     serializer = video_data(queryset, many=True)
-    return Response(serializer.data)  
+    return Response(serializer.data, status=status.HTTP_200_OK)  
 
 
 # function for calling class YTdata which will call API to get data
@@ -118,7 +118,7 @@ def display_string(request):
         "AIzaSyDa1vWMOyRYGq4Qv4Lg_AelhTAiHw4E7OQ",
         "AIzaSyCmLgeX3GtUgfn7ZjkkWHfOWCMb1MkDEpU",
         "AIzaSyDK-WNR6d2LayUqiemCKOcMYPlDV6jvTh0",
-        "AIzaSyB9QNacHSAQ4deQp4RjVf3gXZOKXtMCwJk",
+        "AIzaSyD1N1nQECXYAxmdwcRFV0tqkAa2zLkBFCQ",
         "AIzaSyDAYksLzTBkPf9TQC6th2c9iBSXZ6-Dl8I",
     ]
     # specific query (here used is "smartphone")
