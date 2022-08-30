@@ -25,6 +25,7 @@
         <p class="lead text-muted">Search Videos based on the query</p>
         <form method="POST">
         <div class="input-group mb-3">
+            {% csrf_token %}
             <input type="text" name="search" class="form-control" aria-label="Username">
         </div>
         <p>

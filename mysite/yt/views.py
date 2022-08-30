@@ -140,6 +140,7 @@ def display_string(request):
             print("API Key", i + 1, "is used!")
             api = API_Key[i]
             current_api = api
+            break
     yt = YTData(current_api, query)
     yt.get_loading_stats()
     yt.get_channel_stats()
